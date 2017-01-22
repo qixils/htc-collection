@@ -21,14 +21,14 @@ namespace joinbot
 			_client.UserJoined += async (s, e) => {
 				Channel logChannel = e.Server.GetChannel(207659596167249920);
 				if(logChannel != null)
-					await logChannel.SendMessage($"{e.User.Name} ({e.User.Id}) joined the server.");
+					await logChannel.SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
 			};
 
 			// Register a Hook into the UserUnanned event using a Lambda
 			_client.UserLeft += async (s, e) => {
 				Channel logChannel = e.Server.GetChannel(207659596167249920);
 				if (logChannel != null)
-					await logChannel.SendMessage($"{e.User.Name} ({e.User.Id}) left the server.");
+					await logChannel.SendMessage($"{e.User.Mention} left the server.");
 			};
 
 			string token = File.ReadAllText("token.txt");
