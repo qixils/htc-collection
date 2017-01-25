@@ -17,18 +17,19 @@ namespace joinbot
 
 			_client.Log.Message += (s, e) => Console.WriteLine($"[{e.Severity}] {e.Source}: {e.Message}");
 
-			// Register a Hook into the UserJoined event using a Lambda
 			_client.UserJoined += async (s, e) => {
-				Channel logChannel = e.Server.GetChannel(207659596167249920);
-				if(logChannel != null)
-					await logChannel.SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
+				if(e.Server.Id == 184755239952318464)
+				    await e.Server.GetChannel(207659596167249920).SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
+			};
+				
+			_client.UserLeft += async (s, e) => {
+				if(e.Server.Id == 184755239952318464)
+					await e.Server.GetChannel(207659596167249920).SendMessage($"{e.User.Mention} left the server.");
 			};
 
-			// Register a Hook into the UserUnanned event using a Lambda
-			_client.UserLeft += async (s, e) => {
-				Channel logChannel = e.Server.GetChannel(207659596167249920);
-				if (logChannel != null)
-					await logChannel.SendMessage($"{e.User.Mention} left the server.");
+			_client.UserUpdated += async (s, e) => {
+				if (e.Before.Name != e.After.Name)
+					await _client.GetServer(184755239952318464).GetChannel(207659596167249920).SendMessage($"User **{e.Before.Name}** changed their name to **{e.After.Name}** ({e.After.Mention})");
 			};
 
 			string token = File.ReadAllText("token.txt");

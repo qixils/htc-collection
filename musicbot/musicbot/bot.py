@@ -1740,6 +1740,17 @@ class MusicBot(discord.Client):
 
         return Response(":mailbox_with_mail:", delete_after=20)
 
+    async def cmd_bldump(self, server, author, leftover_args):
+        """
+        Usage:
+            {command_prefix}bldump
+
+        Lists the ids for blacklisted users.
+        """
+
+        await self.send_file(author, "/home/noahkiq/Desktop/Bots/RhinoMusicBot/config/blacklist.txt")
+
+        return Response(":mailbox_with_mail:", delete_after=20)
 
     async def cmd_perms(self, author, channel, server, permissions):
         """
