@@ -18,18 +18,63 @@ namespace joinbot
 			_client.Log.Message += (s, e) => Console.WriteLine($"[{e.Severity}] {e.Source}: {e.Message}");
 
 			_client.UserJoined += async (s, e) => {
-				if(e.Server.Id == 184755239952318464)
-				    await e.Server.GetChannel(207659596167249920).SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
+				Channel logChannel = e.Server.AllChannels.FirstOrDefault();
+				bool validChannel = false;
+
+				// logChannel = e.Server.FindChannels("joinbot").FirstOrDefault();
+				// if(logChannel != null)
+				//     validChannel = true;
+
+				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+
+				if(e.Server.Id == 184755239952318464) {
+					logChannel = e.Server.GetChannel(207659596167249920);
+					validChannel = true;
+				}
+
+				if (validChannel)
+					await logChannel.SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
 			};
 				
 			_client.UserLeft += async (s, e) => {
-				if(e.Server.Id == 184755239952318464)
-					await e.Server.GetChannel(207659596167249920).SendMessage($"{e.User.Mention} left the server.");
+				Channel logChannel = e.Server.AllChannels.FirstOrDefault();
+				bool validChannel = false;
+
+				// logChannel = e.Server.FindChannels("joinbot").FirstOrDefault();
+				// if(logChannel != null)
+				//     validChannel = true;
+
+				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+
+				if(e.Server.Id == 184755239952318464) {
+					logChannel = e.Server.GetChannel(207659596167249920);
+					validChannel = true;
+				}
+
+				if (validChannel)
+					await logChannel.SendMessage($"{e.User.Mention} left the server.");
 			};
 
 			_client.UserUpdated += async (s, e) => {
 				if (e.Before.Name != e.After.Name)
-					await _client.GetServer(184755239952318464).GetChannel(207659596167249920).SendMessage($"User **{e.Before.Name}** changed their name to **{e.After.Name}** ({e.After.Mention})");
+				{
+					Channel logChannel = e.Server.AllChannels.FirstOrDefault();
+					bool validChannel = false;
+
+					// logChannel = e.Server.FindChannels("joinbot").FirstOrDefault();
+					// if(logChannel != null)
+					//     validChannel = true;
+
+					// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+
+					if(e.Server.Id == 184755239952318464) {
+						logChannel = e.Server.GetChannel(207659596167249920);
+						validChannel = true;
+					}
+
+					if (validChannel)
+						await logChannel.SendMessage($"User **{e.Before.Name}** changed their name to **{e.After.Name}** ({e.After.Mention})");
+				}
 			};
 
 			string token = File.ReadAllText("token.txt");
