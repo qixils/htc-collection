@@ -25,15 +25,16 @@ namespace joinbot
 				// if(logChannel != null)
 				//     validChannel = true;
 
-				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 5 lines and uncomment the last 3
 
 				if(e.Server.Id == 184755239952318464) {
 					logChannel = e.Server.GetChannel(207659596167249920);
+					_client.SetGame($"for {e.Server.UserCount} users");
 					validChannel = true;
 				}
-
+					
 				if (validChannel)
-					await logChannel.SendMessage($"{e.User.Mention} (User #{e.Server.UserCount}) user joined the server.");
+					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{e.User.Discriminator}` User #{e.Server.UserCount}) user joined the server.");
 			};
 				
 			_client.UserLeft += async (s, e) => {
@@ -44,15 +45,16 @@ namespace joinbot
 				// if(logChannel != null)
 				//     validChannel = true;
 
-				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+				// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 5 lines and uncomment the last 3
 
 				if(e.Server.Id == 184755239952318464) {
 					logChannel = e.Server.GetChannel(207659596167249920);
+					_client.SetGame($"for {e.Server.UserCount} users");
 					validChannel = true;
 				}
 
 				if (validChannel)
-					await logChannel.SendMessage($"{e.User.Mention} left the server.");
+					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{e.User.Discriminator}`) left the server.");
 			};
 
 			_client.UserUpdated += async (s, e) => {
@@ -65,7 +67,7 @@ namespace joinbot
 					// if(logChannel != null)
 					//     validChannel = true;
 
-					// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 2 lines and uncomment the last three
+					// If you want to log messages to #joinbot instead of one hardcoded channel, comment the next 4 lines and uncomment the last 3
 
 					if(e.Server.Id == 184755239952318464) {
 						logChannel = e.Server.GetChannel(207659596167249920);
