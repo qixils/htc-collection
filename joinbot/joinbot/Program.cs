@@ -33,8 +33,18 @@ namespace joinbot
 					validChannel = true;
 				}
 					
+				string discrim = "" + e.User.Discriminator;
+				if (discrim.Length == 3)
+					discrim = "0" + discrim;
+				else if (discrim.Length == 2)
+					discrim = "00" + discrim;
+				else if (discrim.Length == 1)
+					discrim = "000" + discrim;
+				else if (discrim.Length == 0)
+					discrim = "[Something has gone horribly wrong and the user doesn't have a discriminator. Please inform Noahkiq of this, thanks!]";
+
 				if (validChannel)
-					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{e.User.Discriminator}` User #{e.Server.UserCount}) user joined the server.");
+					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{discrim}` User #{e.Server.UserCount}) user joined the server.");
 			};
 				
 			_client.UserLeft += async (s, e) => {
@@ -53,8 +63,18 @@ namespace joinbot
 					validChannel = true;
 				}
 
+				string discrim = "" + e.User.Discriminator;
+				if (discrim.Length == 3)
+					discrim = "0" + discrim;
+				else if (discrim.Length == 2)
+					discrim = "00" + discrim;
+				else if (discrim.Length == 1)
+					discrim = "000" + discrim;
+				else if (discrim.Length == 0)
+					discrim = "[Something has gone horribly wrong and the user doesn't have a discriminator. Please inform Noahkiq of this, thanks!]";
+
 				if (validChannel)
-					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{e.User.Discriminator}`) left the server.");
+					await logChannel.SendMessage($"{e.User.Mention} (`{e.User.Name}#{discrim}`) left the server.");
 			};
 
 			_client.UserUpdated += async (s, e) => {
@@ -74,8 +94,28 @@ namespace joinbot
 						validChannel = true;
 					}
 
+					string oldDiscrim = "" + e.Before.Discriminator;
+					if (oldDiscrim.Length == 3)
+						oldDiscrim = "0" + oldDiscrim;
+					else if (oldDiscrim.Length == 2)
+						oldDiscrim = "00" + oldDiscrim;
+					else if (oldDiscrim.Length == 1)
+						oldDiscrim = "000" + oldDiscrim;
+					else if (oldDiscrim.Length == 0)
+						oldDiscrim = "[Something has gone horribly wrong and the user doesn't have a discriminator. Please inform Noahkiq of this, thanks!]";
+
+					string newDiscrim = "" + e.After.Discriminator;
+					if (newDiscrim.Length == 3)
+						newDiscrim = "0" + newDiscrim;
+					else if (newDiscrim.Length == 2)
+						newDiscrim = "00" + newDiscrim;
+					else if (newDiscrim.Length == 1)
+						newDiscrim = "000" + newDiscrim;
+					else if (newDiscrim.Length == 0)
+						newDiscrim = "[Something has gone horribly wrong and the user doesn't have a discriminator. Please inform Noahkiq of this, thanks!]";
+
 					if (validChannel)
-						await logChannel.SendMessage($"User **{e.Before.Name}** changed their name to **{e.After.Name}** ({e.After.Mention})");
+						await logChannel.SendMessage($"User **{e.Before.Name}#{oldDiscrim}** changed their name to **{e.After.Name}#{newDiscrim}** ({e.After.Mention})");
 				}
 			};
 
