@@ -16,6 +16,8 @@ MusicBot is a Discord music bot written in [Python](https://www.python.org "Pyth
 
 - [`Listen to Good Songs all Day`](https://www.youtube.com/playlist?list=PLHhAPHiqac1gIJ9t4e8-3TSjrTL4UsHme)
 
+- [Splatoon Soundtrack](https://www.youtube.com/playlist?list=PLvNp0Boas721U2shokZmt75xplbsoB6H8)
+
 ### Singular Video Submissions
 
 - [A Very Nice Song](https://youtu.be/g4b9_e6g9Tw)
