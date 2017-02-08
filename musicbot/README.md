@@ -28,6 +28,8 @@ MusicBot is a Discord music bot written in [Python](https://www.python.org "Pyth
 
 - [Tiny Bubbles](https://www.youtube.com/watch?v=t1NaJN4mwQs)
 
+- [Stand​-​up Maths theme](https://standupmaths.bandcamp.com/releases)
+
 #### Submitting Songs
 
 To submit something to the autoplaylist, use [this Google Form](https://goo.gl/forms/kXdET8Ybc5U8KJtr2). Short playlists & videos will usually get accepted.
