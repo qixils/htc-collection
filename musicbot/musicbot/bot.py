@@ -464,7 +464,7 @@ class MusicBot(discord.Client):
             name = u'{}{}'.format(prefix, entry.title)[:128]
             game = discord.Game(name=name)
 
-        await self.change_status(game)
+        # await self.change_status(game)
 
 
     async def safe_send_message(self, dest, content, *, tts=False, expire_in=0, also_delete=None, quiet=False):
@@ -1418,8 +1418,8 @@ class MusicBot(discord.Client):
                 print("Something strange is happening.  "
                       "You might want to restart the bot if it doesn't start working.")
 
-        if author.id == player.current_entry.meta.get('author', None) \
-                or author.id == player.current_entry.meta['author'].id:
+        if author == player.current_entry.meta.get('author', None) \
+                or author == player.current_entry.meta['author']:
 
             player.skip()  # check autopause stuff here
             await self._manual_delete_check(message)
@@ -1875,7 +1875,7 @@ class MusicBot(discord.Client):
 
         if message.channel.is_private:
             if not (message.author.id == self.config.owner_id and command == 'joinserver'):
-                await self.send_message(message.channel, 'You cannot use this bot in private messages.')
+                # await self.send_message(message.channel, 'You cannot use this bot in private messages.')
                 return
 
         if message.author.id in self.blacklist and message.author.id != self.config.owner_id:
