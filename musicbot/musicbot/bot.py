@@ -1423,7 +1423,9 @@ class MusicBot(discord.Client):
 
             player.skip()  # check autopause stuff here
             await self._manual_delete_check(message)
-            return
+            return Response(
+                'The current song has been force-skipped by the queuer.'
+            )
 
         # TODO: ignore person if they're deaf or take them out of the list or something?
         # Currently is recounted if they vote, deafen, then vote
@@ -1439,7 +1441,7 @@ class MusicBot(discord.Client):
         if skips_remaining <= 0:
             player.skip()  # check autopause stuff here
             return Response(
-                'The current song has been force-skipped by the queuer.'
+                'The skip ratio has been reached, skipping song...'
             )
 
         else:

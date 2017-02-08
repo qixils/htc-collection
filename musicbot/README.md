@@ -10,4 +10,6 @@ MusicBot is a Discord music bot written in [Python](https://www.python.org "Pyth
 
 - [Fez Official Soundtrack](https://www.youtube.com/playlist?list=PL89C6D0CCE49B641D) (playlist)
 
+- [A Very Nice Song](https://youtu.be/g4b9_e6g9Tw) (video)
+
 - [Winterglade](https://www.youtube.com/watch?v=K56DCGJeEnw) (video)
