@@ -388,7 +388,7 @@ class MusicBot(discord.Client):
 
                 async for lmsg in self.logs_from(channel, limit=1):
                     if lmsg != last_np_msg and last_np_msg:
-                        await self.safe_delete_message(last_np_msg)
+                        # await self.safe_delete_message(last_np_msg)
                         self.server_specific_data[channel.server]['last_np_msg'] = None
                     break  # This is probably redundant
 
@@ -1283,7 +1283,7 @@ class MusicBot(discord.Client):
                 np_text = "Now Playing: **%s** %s\n" % (player.current_entry.title, prog_str)
 
             self.server_specific_data[server]['last_np_msg'] = await self.safe_send_message(channel, np_text)
-            await self._manual_delete_check(message)
+            # await self._manual_delete_check(message)
         else:
             return Response(
                 'There are no songs queued! Queue something with {}play.'.format(self.config.command_prefix),
