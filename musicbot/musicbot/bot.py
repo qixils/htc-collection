@@ -1095,7 +1095,7 @@ class MusicBot(discord.Client):
                 print("Dropped %s songs" % drop_count)
 
             if player.current_entry and player.current_entry.duration > permissions.max_song_length:
-                await self.safe_delete_message(self.server_specific_data[channel.server]['last_np_msg'])
+                # await self.safe_delete_message(self.server_specific_data[channel.server]['last_np_msg'])
                 self.server_specific_data[channel.server]['last_np_msg'] = None
                 skipped = True
                 player.skip()
@@ -1269,7 +1269,7 @@ class MusicBot(discord.Client):
 
         if player.current_entry:
             if self.server_specific_data[server]['last_np_msg']:
-                await self.safe_delete_message(self.server_specific_data[server]['last_np_msg'])
+                # await self.safe_delete_message(self.server_specific_data[server]['last_np_msg'])
                 self.server_specific_data[server]['last_np_msg'] = None
 
             song_progress = str(timedelta(seconds=player.progress)).lstrip('0').lstrip(':')
