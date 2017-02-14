@@ -18,6 +18,24 @@ class Program
 
 		_client.MessageReceived += async (s, e) =>
 		{
+			User bot = e.User;
+			User owner = e.User;
+
+			if (!e.Channel.IsPrivate)
+			{
+				bot = e.Server.GetUser(_client.CurrentUser.Id);
+				owner = e.Server.GetUser(140564059417346049);
+			}
+			else
+			{
+				bot = _client.GetServer(184755239952318464).GetUser(_client.CurrentUser.Id);
+				owner = _client.GetServer(184755239952318464).GetUser(140564059417346049);
+			}
+
+			bool isOwner = false;
+			if (e.User == owner)
+				isOwner = true;
+
 			if (e.Message.Text.ToLower() == "!help" && e.Channel.Id != 207785659006451723)
 			{
 				string warning = "**All commands besides `!help` only work in DM's!**\n";
@@ -26,6 +44,14 @@ class Program
 				string msg2 = "To remove yourself from your team, simply type `!Remove`";
 
 				await e.Channel.SendMessage(warning + msg1 + msg2);
+			}
+			else if (isOwner && e.Message.Text == $"!permcheck")
+			{
+				var hasPerm = bot.ServerPermissions.ManageRoles;
+				if (!hasPerm)
+					Console.WriteLine("**Alert:** The bot does not have permission to manage roles.");
+				else
+					Console.WriteLine("The bot currently has permission to manage roles.");
 			}
 			else if (e.Channel.IsPrivate)
 			{
