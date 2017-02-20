@@ -21,6 +21,10 @@ class Program
 			User bot = e.User;
 			User owner = e.User;
 
+			bool inHTC = false;
+			if (_client.GetServer(184755239952318464).GetUser(e.User.Id) != null)
+				inHTC = true;
+
 			if (!e.Channel.IsPrivate)
 			{
 				bot = e.Server.GetUser(_client.CurrentUser.Id);
@@ -36,7 +40,7 @@ class Program
 			if (e.User == owner)
 				isOwner = true;
 
-			if (e.Message.Text.ToLower() == "!help" && e.Channel.Id != 207785659006451723)
+			if (e.Message.Text.ToLower() == "!help" && e.Channel.Name != "music" && e.Server.Id == 184755239952318464)
 			{
 				string warning = "**All commands besides `!help` only work in DM's!**\n";
 				string teams = "Joho, Meester, Midge, Midnight, and Yessoan";
@@ -53,7 +57,7 @@ class Program
 				else
 					Console.WriteLine("The bot currently has permission to manage roles.");
 			}
-			else if (e.Channel.IsPrivate)
+			else if (e.Channel.IsPrivate && inHTC)
 			{
 				Server htc = _client.GetServer(184755239952318464);
 				User user = htc.GetUser(e.User.Id);
