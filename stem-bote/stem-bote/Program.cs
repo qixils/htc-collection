@@ -147,7 +147,7 @@ namespace stembote
 									int dice = int.Parse(args[1]); // Set # of dice to roll
 
 									int maxRolls = sides + 1; // Set max roll int
-									if((dice < 1) || (sides < 1)) // check if # of dice/die sides is under 1 (NOTE: the # of dice check doesn't work)
+									if((dice < 1) || (sides < 1)) // check if # of dice/die sides is under 1
 										output = $"Yeahh, sorry, but you can't roll something that doesn't exist.";
 									else if(sides == 1)
 										output = $"All {dice} of the 1-sided dice shockingly rolled a 1."; // Change output if first arg was 1
