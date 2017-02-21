@@ -6,6 +6,8 @@ flairbot by myself - gives and removes roles (or "flairs") to users
 
 joinbot by myself - used to log joins and leaves
 
+stem-bote by myself - general bot made for the HSTEM server
+
 [musicbot](https://github.com/Just-Some-Bots/MusicBot) by [various contributors](https://github.com/Just-Some-Bots/MusicBot/graphs/contributors) - used to play music
 
 soundbot by myself - (removed) used to meme and and post yt vids
