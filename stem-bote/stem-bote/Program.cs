@@ -4,6 +4,7 @@ using System.Linq;
 using Discord;
 using System.Collections.Generic;
 using System.Timers;
+using System.Threading;
 
 namespace stembote
 {
@@ -12,6 +13,7 @@ namespace stembote
 		static void Main(string[] args) => new stembote().Start();
 
 		public static DiscordClient _client = new DiscordClient();
+		public static List<User> users = new List<User>();
 
 		public void Start()
 		{
@@ -32,7 +34,7 @@ namespace stembote
 				string msg = e.Message.Text; // grab contents of message
 				string rawmsg = e.Message.RawText; // grab raw contents of message
 
-				if(isCmd && (e.Channel.Id == 282500390891683841 || isOwner))
+				if(isCmd && e.Channel.Id == 282500390891683841)
 				{
 					var msgarray = msg.Replace (p, "").Split (' ');
 					string cmd = msgarray.FirstOrDefault ().ToString ();
@@ -58,6 +60,8 @@ namespace stembote
 					}
 					else if (cmd == "userinfo")
 					{
+						users = e.Server.Users.OrderBy(user => user.JoinedAt).ToList(); // refresh user cache for later on
+
 						// find user
 
 						User usr = e.User;
@@ -96,6 +100,16 @@ namespace stembote
 						var joinedDays = DateTime.Now - joined;
 						string avatar = usr.AvatarUrl;
 
+						int usercount = 0;
+						int memnum = 0;
+						while (memnum == 0)
+						{
+							usercount++;
+							User currentuser = users.ElementAt (usercount);
+							if(e.User == currentuser)
+								memnum = usercount;
+						}
+
 						// send message
 
 						await e.Channel.SendMessage($"```ini\n" +
@@ -106,6 +120,7 @@ namespace stembote
 							$"[Current game]  {game}\n" +
 							// $"[Status]        {status}\n" +     | disabled because everyone shows as offline. possible discord bug
 							$"[Joined]        {joined} ({joinedDays.Days} days ago)\n" +
+							//$"[Member #]      {memnum}\n" +      | broken for some reason. often shows users as being member #11
 							$"[Avatar] {avatar}\n```");
 					}
 					else if (cmd == "serverinfo")
@@ -195,8 +210,13 @@ namespace stembote
 										else if (sides == 1337)
 											output = $"Th3 {sides}-51d3d d13 r0ll3d 4 {random.Next(1, maxRolls)}.";
 										else if (sides == e.Server.UserCount) {
+											if(users.Count == 0) {
+												users = e.Server.Users.OrderBy(user => user.JoinedAt).ToList();
+												Thread.Sleep (500);
+											}
+
 											int rndNumber = random.Next(1, maxRolls);
-											string rndUser = e.Server.Users.ElementAt (rndNumber).Name;
+											string rndUser = users.ElementAt (rndNumber).Name;
 											output = $"{e.Server.UserCount}? That's how many users are on the server! Well, your die rolled a {random.Next(1, maxRolls)}, and according to the cache, that member is `{rndUser}`.";
 										}
 									}
@@ -211,7 +231,43 @@ namespace stembote
 							await e.Channel.SendMessage($"An error occured while trying to roll the dice. You most likely entered non-integers.");
 						}
 					}
+					else if (cmd == "randomuser")
+					{
+						Random random = new Random();
+
+						if(users.Count == 0) {
+							users = e.Server.Users.OrderBy(user => user.JoinedAt).ToList(); // cache users if not already cached
+						}
+
+						int rndNumber = random.Next(1, e.Server.UserCount + 1);
+
+						try
+						{
+							string rndUser = users.ElementAt (rndNumber).Name;
+							await e.Channel.SendMessage($"Your random user of the day is {rndUser}, who was the {rndNumber} member to join the server.");
+						}
+						catch (Exception error)
+						{
+							Console.WriteLine ($"[ERROR] Something happened while running {p}{cmd}: \n{error.ToString()}");
+							if(rndNumber > e.Server.UserCount)
+								await e.Channel.SendMessage($"Something happened while trying to grab information about user #{rndNumber}, which seems to be bigger than the current user count ({e.Server.UserCount}) - good job <@140564059417346049> \ud83d\udc4f");
+							else
+								await e.Channel.SendMessage($"Something happened while trying to grab information about user #{rndNumber}.");
+						}
+					}
 				}
+			};
+
+			_client.UserJoined += (s, e) =>
+			{
+				if(e.Server.Id == 282219466589208576)
+					users.Add(e.User);
+			};
+
+			_client.UserLeft += (s, e) =>
+			{
+				if(e.Server.Id == 282219466589208576)
+					users.Remove(e.User);
 			};
 
 			string token = File.ReadAllText("token.txt");
