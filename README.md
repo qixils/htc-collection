@@ -15,6 +15,6 @@ soundbot by myself - (removed) used to meme and and post yt vids
 twowbot by myself - (on hiatus) automated mini twows
 
 ## Requirements
-flairbot/joinbot/soundbot/twowbot - a program to open C# files, such as [Visual Studio](https://www.visualstudio.com/) (win) or [MonoDevelop](http://www.monodevelop.com/) (win, mac, linux)
+flairbot/joinbot/soundbot/twowbot/stem-bote - a program to open C# files, such as [Visual Studio](https://www.visualstudio.com/) (win) or [MonoDevelop](http://www.monodevelop.com/) (win, mac, linux)
 
 musicbot - [python 3.X](https://www.python.org/downloads/release/python-360/)
