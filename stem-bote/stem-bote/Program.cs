@@ -39,8 +39,9 @@ namespace stembote
 					var msgarray = msg.Replace (p, "").Split (' ');
 					string cmd = msgarray.FirstOrDefault ().ToString ();
 					var args = msgarray.Skip (1).ToArray ();
+
 					var argtext = msg.Replace(p+cmd+"", "");
-					if (argtext.Contains(p+cmd+" "))
+					if (msg.Contains(p+cmd+" "))
 						argtext = msg.Replace(p+cmd+" ", "");
 
 					if(cmd == "help")
@@ -65,13 +66,16 @@ namespace stembote
 						// find user
 
 						User usr = e.User;
+						var txtsearch = e.Server.FindUsers(argtext, false).FirstOrDefault();
 
-						if (e.Message.MentionedUsers.FirstOrDefault () != null)
-							usr = e.Message.MentionedUsers.FirstOrDefault ();
-						else if (argtext != "") { // this is broken, need to look into why
-							if (e.Server.FindUsers(argtext).FirstOrDefault () != null)
-								usr = e.Server.FindUsers(argtext).FirstOrDefault ();
+						if (e.Message.MentionedUsers.FirstOrDefault () != null) // checks if there's a mentioned user
+							usr = e.Message.MentionedUsers.FirstOrDefault (); // updates 'usr' to be the mentioned user
+						else if (argtext != "") {
+							if (txtsearch != null)
+								usr = txtsearch;
 						}
+						else if(e.Server.GetUser(Convert.ToUInt64(argtext)) != null)
+							usr = e.Server.GetUser(Convert.ToUInt64(argtext));
 
 						// get user info
 
@@ -118,7 +122,7 @@ namespace stembote
 							$"[Discriminator] {discrim}\n" +
 							$"[Nickname]      {nickname}\n" +
 							$"[Current game]  {game}\n" +
-							// $"[Status]        {status}\n" +     | disabled because everyone shows as offline. possible discord bug
+							// $"[Status]        {status}\n" +     // disabled because everyone shows as offline. possible discord bug
 							$"[Joined]        {joined} ({joinedDays.Days} days ago)\n" +
 							//$"[Member #]      {memnum}\n" +      | broken for some reason. often shows users as being member #11
 							$"[Avatar] {avatar}\n```");
