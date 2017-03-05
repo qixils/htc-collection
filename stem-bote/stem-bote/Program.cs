@@ -74,18 +74,18 @@ namespace stembote
 							if (txtsearch != null)
 								usr = txtsearch;
 						}
-						else if(e.Server.GetUser(Convert.ToUInt64(argtext)) != null)
-							usr = e.Server.GetUser(Convert.ToUInt64(argtext));
+//						else if(e.Server.GetUser(Convert.ToUInt64(argtext)) != null)
+//							usr = e.Server.GetUser(Convert.ToUInt64(argtext));
 
 						// get user info
 
 						ulong id = usr.Id;
-						string username = usr.Name;
+						string username = clearformatting(usr.Name);
 						string discrim = $"#{usr.Discriminator}";
 
-						string nickname = usr.Nickname;
-						if (string.IsNullOrWhiteSpace(nickname))
-							nickname = "[none]";
+						string nickname = "[none]";
+						if (!string.IsNullOrWhiteSpace(usr.Nickname))
+							nickname = clearformatting(usr.Nickname);
 
 						string game;
 						string status = usr.Status.ToString();
@@ -94,7 +94,7 @@ namespace stembote
 							game = "[none]";
 						else
 						{
-							game = usr.CurrentGame.GetValueOrDefault().Name;
+							game = clearformatting(usr.CurrentGame.GetValueOrDefault().Name);
 							string streamUrl = usr.CurrentGame.GetValueOrDefault().Url;
 							if (usr.CurrentGame.GetValueOrDefault().Url != null)
 								status = $"streaming # {streamUrl}";
@@ -104,15 +104,15 @@ namespace stembote
 						var joinedDays = DateTime.Now - joined;
 						string avatar = usr.AvatarUrl;
 
-						int usercount = 0;
-						int memnum = 0;
-						while (memnum == 0)
-						{
-							usercount++;
-							User currentuser = users.ElementAt (usercount);
-							if(e.User == currentuser)
-								memnum = usercount;
-						}
+//						int usercount = 0;
+//						int memnum = 0;
+//						while (memnum == 0)
+//						{
+//							usercount++;
+//							User currentuser = users.ElementAt (usercount);
+//							if(e.User == currentuser)
+//								memnum = usercount;
+//						}
 
 						// send message
 
@@ -122,7 +122,7 @@ namespace stembote
 							$"[Discriminator] {discrim}\n" +
 							$"[Nickname]      {nickname}\n" +
 							$"[Current game]  {game}\n" +
-							// $"[Status]        {status}\n" +     // disabled because everyone shows as offline. possible discord bug
+							$"[Status]        {status}\n" +
 							$"[Joined]        {joined} ({joinedDays.Days} days ago)\n" +
 							//$"[Member #]      {memnum}\n" +      | broken for some reason. often shows users as being member #11
 							$"[Avatar] {avatar}\n```");
@@ -139,14 +139,14 @@ namespace stembote
 						string region = e.Server.Region.Name;
 
 						await e.Channel.SendMessage($"```ini\n" +
-							$"[Name]            {e.Server.Name}\n" +
+							$"[Name]            {clearformatting(e.Server.Name)}\n" +
 							$"[ID]              {e.Server.Id}\n" +
 							$"[User Count]      {e.Server.UserCount}\n" +
 							$"[Channel Count]   {e.Server.ChannelCount}\n" +
 							$"[Default Channel] #{e.Server.DefaultChannel}\n" +
 							$"[Role Count]      {e.Server.RoleCount}\n" +
-							$"[Roles]           {rolesString}\n" +
-							$"[Owner]           @{e.Server.Owner}\n" +
+							$"[Roles]           {clearformatting(rolesString)}\n" +
+							$"[Owner]           @{clearformatting(e.Server.Owner.ToString())}\n" +
 							$"[Creation date]   {e.Server.Owner.JoinedAt} ({CreationDate.Days} days ago) # possibly inaccurate\n" +
 							$"[Icon] {e.Server.IconUrl}\n" +
 							$"```");
@@ -280,6 +280,14 @@ namespace stembote
 				Console.WriteLine($"Connected as {_client.CurrentUser.Name}#{_client.CurrentUser.Discriminator}");
 			});
 
+		}
+
+		public static string clearformatting (string input)
+		{
+			var output = "[empty string]";
+			if(!string.IsNullOrWhiteSpace(input))
+				output = input.Replace("`", "​`").Replace("*", "​*").Replace("_", "​_").Replace("‮", " ");
+			return output;
 		}
 	}
 }
