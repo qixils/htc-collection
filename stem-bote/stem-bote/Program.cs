@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Discord;
 using System.Collections.Generic;
-using System.Timers;
 using System.Threading;
 
 namespace stembote
@@ -279,29 +278,29 @@ namespace stembote
 
                     if (cmd == "yt")
                     {
-						if(_client.GetServer(282219466589208576).GetUser(e.User.Id) == null)
-						    await e.Channel.SendMessage($"You must be on HTwins STEM to use this command. You can join it here: https://discord.gg/4Gn4GAC");
+                        if (_client.GetServer(282219466589208576).GetUser(e.User.Id) == null)
+                            await e.Channel.SendMessage($"You must be on HTwins STEM to use this command. You can join it here: https://discord.gg/4Gn4GAC");
 
-						else if (args.Length == 1)
-						{
-							var hstem = _client.GetServer(282219466589208576);
-							var huser = hstem.GetUser(e.User.Id);
-							var role = hstem.FindRoles("Youtube").FirstOrDefault();
+                        else if (args.Length == 1)
+                        {
+                            var hstem = _client.GetServer(282219466589208576);
+                            var huser = hstem.GetUser(e.User.Id);
+                            var role = hstem.FindRoles("Youtube").FirstOrDefault();
 
-							if(args[0] == "on")
-							{
-								await huser.AddRoles(role);
-								await e.Channel.SendMessage($"You have been given the YouTube notification role on HTwins STEM.");
-							}
-							else if (args[0] == "off")
-							{
-								await huser.RemoveRoles(role);
-								await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.");
-							}
-						}
+                            if (args[0] == "on")
+                            {
+                                await huser.AddRoles(role);
+                                await e.Channel.SendMessage($"You have been given the YouTube notification role on HTwins STEM.");
+                            }
+                            else if (args[0] == "off")
+                            {
+                                await huser.RemoveRoles(role);
+                                await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.");
+                            }
+                        }
 
-						else
-						    await e.Channel.SendMessage($"Proper usage: `{p}yt [on/off]`");
+                        else
+                            await e.Channel.SendMessage($"Proper usage: `{p}yt [on/off]`");
                     }
                 }
             };
