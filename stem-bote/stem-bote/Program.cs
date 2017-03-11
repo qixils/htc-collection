@@ -284,17 +284,19 @@ namespace stembote
 
 						else if (args.Length == 1)
 						{
-							var role = _client.GetServer(282219466589208576).FindRoles("Youtube").FirstOrDefault();
+							var hstem = _client.GetServer(282219466589208576);
+							var huser = hstem.GetUser(e.User.Id);
+							var role = hstem.FindRoles("Youtube").FirstOrDefault();
 
 							if(args[0] == "on")
 							{
-								await e.User.AddRoles(role);
+								await huser.AddRoles(role);
 								await e.Channel.SendMessage($"You have been given the YouTube notification role on HTwins STEM.");
 							}
 							else if (args[0] == "off")
 							{
-								await e.User.RemoveRoles(role);
-								await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.")
+								await huser.RemoveRoles(role);
+								await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.");
 							}
 						}
 
