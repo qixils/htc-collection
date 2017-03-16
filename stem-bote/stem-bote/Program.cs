@@ -4,6 +4,7 @@ using System.Linq;
 using Discord;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 
 namespace stembote
 {
@@ -33,18 +34,18 @@ namespace stembote
                 string msg = e.Message.Text; // grab contents of message
                 string rawmsg = e.Message.RawText; // grab raw contents of message
 
+                var msgarray = msg.Replace(p, "").Split(' ');
+                string cmd = msgarray.FirstOrDefault().ToString();
+                List<string> args = msgarray.Skip(1).ToList();
+
+                var argtext = msg.Replace(p + cmd + "", "");
+                if (msg.Contains(p + cmd + " "))
+                    argtext = msg.Replace(p + cmd + " ", "");
+
                 if (!e.Channel.IsPrivate)
                 {
                     if (isCmd && e.Channel.Id == 282500390891683841)
                     {
-                        var msgarray = msg.Replace(p, "").Split(' ');
-                        string cmd = msgarray.FirstOrDefault().ToString();
-                        var args = msgarray.Skip(1).ToArray();
-
-                        var argtext = msg.Replace(p + cmd + "", "");
-                        if (msg.Contains(p + cmd + " "))
-                            argtext = msg.Replace(p + cmd + " ", "");
-
                         if (cmd == "help")
                         {
                             string help = $"`{p}help` - lists the bot commands";
@@ -53,7 +54,7 @@ namespace stembote
                             string serverinfo = $"`{p}serverinfo` - displays info about the server";
                             string roll = $"`{p}roll [# of sides] [# of dice to roll]` - rolls some dice";
                             string randomuser = $"`{p}randomuser` - selects a random user on the server";
-                            
+
                             string yt = $"`{p}yt [on/off]` - turn YT video notifications on/off";
 
                             string cmds = $"\n{help}\n{usercount}\n{userinfo}\n{serverinfo}\n{roll}\n{randomuser}";
@@ -63,6 +64,8 @@ namespace stembote
                             string helpmsg = greet + avacmds;
                             await e.Channel.SendMessage(helpmsg);
                         }
+                        else if (cmd == "usercount")
+                            await e.Channel.SendMessage($"`{e.Server.Name}` currently has {e.Server.UserCount} users.");
                         else if (cmd == "userinfo")
                         {
                             users = e.Server.Users.OrderBy(user => user.JoinedAt).ToList(); // refresh user cache for later on
@@ -93,7 +96,7 @@ namespace stembote
                                 nickname = clearformatting(usr.Nickname);
 
                             string game;
-                            string status = usr.Status.ToString();
+                            // string status = usr.Status.ToString();
 
                             if (usr.CurrentGame == null)
                                 game = "[none]";
@@ -101,8 +104,8 @@ namespace stembote
                             {
                                 game = clearformatting(usr.CurrentGame.GetValueOrDefault().Name);
                                 string streamUrl = usr.CurrentGame.GetValueOrDefault().Url;
-                                if (usr.CurrentGame.GetValueOrDefault().Url != null)
-                                    status = $"streaming # {streamUrl}";
+                                //if (usr.CurrentGame.GetValueOrDefault().Url != null)
+                                //    status = $"streaming # {streamUrl}";
                             }
 
                             DateTime joined = usr.JoinedAt;
@@ -163,7 +166,7 @@ namespace stembote
                                 Random random = new Random(); // Generate some randomness
                                 string output = $"The 6-sided die rolled a {random.Next(1, 7)}."; // Define default output
 
-                                if (args.Length == 2) // tests if there are two arguments
+                                if (args.Count == 2) // tests if there are two arguments
                                 {
                                     if (args[1] != null)
                                     {
@@ -184,7 +187,7 @@ namespace stembote
                                                 while (rollTracker > 0) // If there are still dice to roll...
                                                 {
                                                     if (rollTracker > 1) /// ...and it's not only one die...
-				    									rolledDice += $"{random.Next(1, maxRolls)}, "; // ... add a random roll to the roledDice string
+                                                        rolledDice += $"{random.Next(1, maxRolls)}, "; // ... add a random roll to the roledDice string
                                                     else // or, if there is only one die left
                                                         rolledDice += $"and {random.Next(1, maxRolls)}"; // add the final random roll
 
@@ -199,7 +202,7 @@ namespace stembote
                                             output = "Woahh, that's a lot of dice to roll. Try lowering it below 30?"; // display error message because 30 rolls = lots of spam
                                     }
                                 }
-                                else if (args.Length == 1)
+                                else if (args.Count == 1)
                                 {
                                     if (args[0] != null)
                                     {
@@ -267,44 +270,44 @@ namespace stembote
                                     await e.Channel.SendMessage($"Something happened while trying to grab information about user #{rndNumber}.");
                             }
                         }
+                        else if (cmd == "debug" && isOwner)
+                        {
+                            Role ytrole = e.Server.FindRoles("Youtube Ping").FirstOrDefault();
+                            await e.Channel.SendMessage($"YT Role id: {ytrole.Id}");
+                        }
                     }
                 }
-                else
+
+                bool isHSTEM = false;
+                if (e.Server != null)
+                    if (e.Server.Id == 282219466589208576)
+                        isHSTEM = true;
+
+                if (cmd == "yt" && (isHSTEM || e.Channel.IsPrivate))
                 {
-                    var msgarray = msg.Replace(p, "").Split(' ');
-                    string cmd = msgarray.FirstOrDefault().ToString();
-                    var args = msgarray.Skip(1).ToArray();
+                    if (_client.GetServer(282219466589208576).GetUser(e.User.Id) == null)
+                        await e.Channel.SendMessage($"You must be on HTwins STEM to use this command. You can join it here: https://discord.gg/4Gn4GAC");
 
-                    var argtext = msg.Replace(p + cmd + "", "");
-                    if (msg.Contains(p + cmd + " "))
-                        argtext = msg.Replace(p + cmd + " ", "");
-
-                    if (cmd == "yt")
+                    else if (args.Count == 1)
                     {
-                        if (_client.GetServer(282219466589208576).GetUser(e.User.Id) == null)
-                            await e.Channel.SendMessage($"You must be on HTwins STEM to use this command. You can join it here: https://discord.gg/4Gn4GAC");
+                        var hstem = _client.GetServer(282219466589208576);
+                        var huser = hstem.GetUser(e.User.Id);
+                        var role = hstem.GetRole(289942717419749377);
 
-                        else if (args.Length == 1)
+                        if (args[0] == "on")
                         {
-                            var hstem = _client.GetServer(282219466589208576);
-                            var huser = hstem.GetUser(e.User.Id);
-                            var role = hstem.FindRoles("Youtube").FirstOrDefault();
-
-                            if (args[0] == "on")
-                            {
-                                await huser.AddRoles(role);
-                                await e.Channel.SendMessage($"You have been given the YouTube notification role on HTwins STEM.");
-                            }
-                            else if (args[0] == "off")
-                            {
-                                await huser.RemoveRoles(role);
-                                await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.");
-                            }
+                            await huser.AddRoles(role);
+                            await e.Channel.SendMessage($"You have been given the YouTube notification role on HTwins STEM.");
                         }
-
-                        else
-                            await e.Channel.SendMessage($"Proper usage: `{p}yt [on/off]`");
+                        else if (args[0] == "off")
+                        {
+                            await huser.RemoveRoles(role);
+                            await e.Channel.SendMessage($"You have been removed from the YouTube notification role on HTwins STEM.");
+                        }
                     }
+
+                    else
+                        await e.Channel.SendMessage($"Proper usage: `{p}yt [on/off]`");
                 }
             };
 

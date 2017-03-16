@@ -8,7 +8,7 @@ joinbot by myself - used to log joins and leaves
 
 stem-bote by myself - general bot made for the HSTEM server
 
-[musicbot](https://github.com/Just-Some-Bots/MusicBot) by [various contributors](https://github.com/Just-Some-Bots/MusicBot/graphs/contributors) - used to play music
+[musicbot](https://github.com/Just-Some-Bots/MusicBot) by [various contributors](https://github.com/Just-Some-Bots/MusicBot/graphs/contributors) - used to play music | now in (seperate repo)[https://github.com/Noahkiq/RhinoMusicBot]
 
 soundbot by myself - (removed) used to meme and and post yt vids
 
@@ -17,4 +17,4 @@ twowbot by myself - (on hiatus) automated mini twows
 ## Requirements
 flairbot/joinbot/soundbot/twowbot/stem-bote - a program to open C# files, such as [Visual Studio](https://www.visualstudio.com/) (win) or [MonoDevelop](http://www.monodevelop.com/) (win, mac, linux)
 
-musicbot - [python 3.X](https://www.python.org/downloads/release/python-360/)
+musicbot - see [wiki](https://github.com/Just-Some-Bots/MusicBot/wiki)
