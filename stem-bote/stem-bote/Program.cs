@@ -272,8 +272,13 @@ namespace stembote
                         }
                         else if (cmd == "debug" && isOwner)
                         {
-                            Role ytrole = e.Server.FindRoles("Youtube Ping").FirstOrDefault();
-                            await e.Channel.SendMessage($"YT Role id: {ytrole.Id}");
+                            var roles = e.Server.Roles.OrderBy(role => role.Position).ToList();
+                            var rolestring = "Sever roles: ";
+                            foreach (Role role in roles)
+                            {
+                                rolestring += role.Name + " | ";
+                            }
+                            Console.WriteLine(rolestring);
                         }
                     }
                 }
