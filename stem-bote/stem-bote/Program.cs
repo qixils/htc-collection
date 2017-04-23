@@ -1,10 +1,16 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using Discord;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+using Discord;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Threading;
+using Argotic.Common;
+using Argotic.Syndication;
 
 namespace stembote
 {
@@ -17,6 +23,16 @@ namespace stembote
 
         public void Start()
         {
+            System.Timers.Timer caryCheckTimer = new System.Timers.Timer();
+            caryCheckTimer.Elapsed += new ElapsedEventHandler(caryVideoChecker);
+            caryCheckTimer.Interval = 60000;
+            caryCheckTimer.Enabled = true;
+
+            System.Timers.Timer abaCheckTimer = new System.Timers.Timer();
+            abaCheckTimer.Elapsed += new ElapsedEventHandler(abaVideoChecker);
+            abaCheckTimer.Interval = 60000;
+            abaCheckTimer.Enabled = true;
+
             _client.Log.Message += (s, e) => Console.WriteLine($"[{e.Severity}] {e.Source}: {e.Message}");
 
             _client.MessageReceived += async (s, e) =>
@@ -337,6 +353,114 @@ namespace stembote
 
         }
 
+        private static void caryVideoChecker(object source, ElapsedEventArgs e)
+        {
+            SyndicationResourceLoadSettings settings = new SyndicationResourceLoadSettings();
+            settings.RetrievalLimit = 1;
+    
+            Uri feedUrl = new Uri("https://www.youtube.com/feeds/videos.xml?user=carykh");
+            AtomFeed feed = AtomFeed.Create(feedUrl, settings);
+            var videos = feed.Entries;
+    
+            bool alreadyPosted = false;
+    
+            if (videos.Count() == 0)
+                Console.WriteLine("[Error] Feed contained no information.");
+    
+            foreach (var video in videos)
+            {
+	    		try
+	    		{
+	    			string videoUrlsFile = Directory.GetCurrentDirectory() + "/videoUrls.txt"; // String for the video URLS to check if a post is new, uses "videoUrls.txt" in directory the .exe is run from by default
+	    			var logFile = File.ReadAllLines(videoUrlsFile);
+	    			List<string> videoUrls = new List<string>(logFile);
+    
+	    			string newVideoUrl = video.Links.FirstOrDefault().Uri.ToString();
+	    			string videoTitle = video.Title.Content;
+    
+	    			foreach (var videoUrl in videoUrls)
+	    			{
+	    				if (newVideoUrl == videoUrl)
+	    				{
+	    					alreadyPosted = true;
+	    				}
+	    			}
+    
+	    			try
+	    			{
+	    				if (alreadyPosted == false)
+	    				{
+                            string vidinfo = $"\"{videoTitle}\" - {newVideoUrl}";
+
+	    					Console.WriteLine($"Found new video URL - {vidinfo} - Sending to discord");
+    
+	    					using (StreamWriter text = File.AppendText(videoUrlsFile))
+	    						text.WriteLine(newVideoUrl);
+    
+	    					_client.GetChannel(282225245761306624).SendMessage($"@here `carykh` has uploaded a new YouTube video!\n {vidinfo}");
+	    				}
+	    			}
+	    			catch (Exception error)
+	    			{
+	    				Console.WriteLine($"[Error] Bot ran into an issue while trying to post the video to discord. {error.ToString()}");
+	    			}
+	    		}
+	    		catch (Exception error)
+	    		{
+	    			Console.WriteLine("[Error] An error occured during the video check -" + error.ToString());
+	    		}
+            }
+    
+        }
+    
+        private static void abaVideoChecker(object source, ElapsedEventArgs e)
+        {
+            SyndicationResourceLoadSettings settings = new SyndicationResourceLoadSettings();
+            settings.RetrievalLimit = 1;
+    
+            Uri feedUrl = new Uri("https://www.youtube.com/feeds/videos.xml?user=1abacaba1");
+            AtomFeed feed = AtomFeed.Create(feedUrl, settings);
+            var videos = feed.Entries;
+    
+            bool alreadyPosted = false;
+    
+            if (videos.Count() == 0)
+                Console.WriteLine("[Error] Feed contained no information.");
+    
+            foreach (var video in videos)
+            {
+                string videoUrlsFile = Directory.GetCurrentDirectory() + "/videoUrls.txt"; // String for the video URLS to check if a post is new, uses "videoUrls.txt" in directory the .exe is run from by default
+                var logFile = File.ReadAllLines(videoUrlsFile);
+                List<string> videoUrls = new List<string>(logFile);
+    
+                string newVideoUrl = video.Links.FirstOrDefault().Uri.ToString();
+                string videoTitle = video.Title.Content;
+    
+                foreach (var videoUrl in videoUrls)
+                    if (newVideoUrl == videoUrl)
+                        alreadyPosted = true;
+    
+                try
+                {
+	    				if (alreadyPosted == false)
+	    				{
+                            string vidinfo = $"\"{videoTitle}\" - {newVideoUrl}";
+
+	    					Console.WriteLine($"Found new video URL - {vidinfo} - Sending to discord");
+    
+	    					using (StreamWriter text = File.AppendText(videoUrlsFile))
+	    						text.WriteLine(newVideoUrl);
+    
+	    					_client.GetChannel(282225245761306624).SendMessage($"@here `abacaba` has uploaded a new YouTube video!\n {vidinfo}");
+	    				}
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine($"[Error] Bot ran into an issue while trying to post the video to discord. {error.ToString()}");
+                }
+            }
+    
+        }
         public static string clearformatting(string input)
         {
             var output = "[empty string]";

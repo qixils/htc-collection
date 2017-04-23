@@ -44,7 +44,7 @@ class Program
 			{
 				if(e.Channel.Name != "music" && e.Server.Id == 184755239952318464) {
 					string warning = "**All commands besides `!help` only work in DM's!**\n";
-					string teams = "Joho, Meester, Midge, Midnight, and Yessoan";
+					string teams = "Joho, Meester, Midnight, and Yessoan";
 					string msg1 = "To join a team, type `!` followed by one of the living TWOWers names (the living TWOWers are " + teams + ") - ex: `!Meester`\n";
 					string msg2 = "To remove yourself from your team, simply type `!Remove`";
 
@@ -66,13 +66,11 @@ class Program
 					Server htc = _client.GetServer(184755239952318464);
 					var joho = htc.FindRoles("#TeamJoho", false).FirstOrDefault().Members.Count();
 					var meester = htc.FindRoles("#TeamMeester", false).FirstOrDefault().Members.Count();
-					var midge = htc.FindRoles("#TeamMidge", false).FirstOrDefault().Members.Count();
 					var midnight = htc.FindRoles("#TeamMidnight", false).FirstOrDefault().Members.Count();
 					var yessoan = htc.FindRoles("#TeamYessoan", false).FirstOrDefault().Members.Count();
 					Console.WriteLine ("--- FLAIR STATS ---");
 					Console.WriteLine ("JoHo: " + joho);
 					Console.WriteLine ("Meester: " + meester);
-					Console.WriteLine ("Midge: " + midge);
 					Console.WriteLine ("Midnight: " + midnight);
 					Console.WriteLine ("Yessoan: " + yessoan);
 					Console.WriteLine ("--- END STATS ---");
@@ -94,7 +92,7 @@ class Program
 					if (e.Message.Text.ToLower() == "!help" && e.Channel.Name != "music")
 					{
 						string warning = "**All commands besides `!help` only work in DM's!**\n";
-						string avateams = "Joho, Meester, Midge, Midnight, and Yessoan";
+						string avateams = "Joho, Meester, Midnight, and Yessoan";
 						string msg1 = $"To join a team, type `!` followed by one of the living TWOWers names (the living TWOWers are {avateams}) - ex `!Meester`\n";
 						string msg2 = "To remove yourself from your team, simply type `!Remove`";
 
@@ -145,20 +143,6 @@ class Program
 						Role team = htc.FindRoles("#TeamMeester", false).FirstOrDefault();
 						await user.AddRoles(team);
 						await e.Channel.SendMessage("You have joined #TeamMeester.");
-					}
-					else if (e.Message.Text.ToLower() == "!midge")
-					{
-						foreach (Role role in teams)
-						{
-							if (user.HasRole(role))
-							{
-								await user.RemoveRoles(role);
-								System.Threading.Thread.Sleep(500);
-							}
-						}
-						Role team = htc.FindRoles("#TeamMidge", false).FirstOrDefault();
-						await user.AddRoles(team);
-						await e.Channel.SendMessage("You have joined #TeamMidge.");
 					}
 					else if (e.Message.Text.ToLower() == "!midnight")
 					{
