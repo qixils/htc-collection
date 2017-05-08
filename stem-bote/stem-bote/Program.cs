@@ -126,6 +126,8 @@ namespace stembote
 
                             DateTime joined = usr.JoinedAt;
                             var joinedDays = DateTime.Now - joined;
+                            DateTimeOffset created = CreationDate(usr.Id);
+                            var createdDays = DateTime.Now - created;
                             string avatar = usr.AvatarUrl;
 
                             //	int usercount = 0;
@@ -148,6 +150,7 @@ namespace stembote
                                 $"[Current game]  {game}\n" +
                                 // $"[Status]        {status}\n" +
                                 $"[Joined]        {joined} ({joinedDays.Days} days ago)\n" +
+                                $"[Created]       {created.ToString().Replace(" +00:00", "")} ({createdDays.Days} days ago)\n" +
                                 //$"[Member #]      {memnum}\n" +      | broken for some reason. often shows users as being member #11
                                 $"[Avatar] {avatar}\n```");
                         }
@@ -158,7 +161,8 @@ namespace stembote
                             foreach (Role role in Roles)
                                 rolesList.Add(role.Name);
 
-                            var CreationDate = DateTime.Now - e.Server.Owner.JoinedAt;
+                            DateTimeOffset created = CreationDate(e.Server.Id);
+                            var createdDays = DateTime.Now - created;
                             string rolesString = string.Join(", ", rolesList.ToArray());
                             string region = e.Server.Region.Name;
 
@@ -171,7 +175,7 @@ namespace stembote
                                 $"[Role Count]      {e.Server.RoleCount}\n" +
                                 $"[Roles]           {clearformatting(rolesString)}\n" +
                                 $"[Owner]           @{clearformatting(e.Server.Owner.ToString())}\n" +
-                                $"[Creation date]   {e.Server.Owner.JoinedAt} ({CreationDate.Days} days ago) # possibly inaccurate\n" +
+							    $"[Created]         {created.ToString().Replace(" +00:00", "")} ({createdDays.Days} days ago)\n" +
                                 $"[Icon] {e.Server.IconUrl}\n" +
                                 $"```");
                         }
@@ -467,6 +471,10 @@ namespace stembote
             if (!string.IsNullOrWhiteSpace(input))
                 output = input.Replace("`", "​`").Replace("*", "​*").Replace("_", "​_").Replace("‮", " ");
             return output;
+        }
+        public static DateTimeOffset CreationDate(ulong id)
+        {
+			return DateTimeOffset.FromUnixTimeMilliseconds((Convert.ToInt64(id) >> 22) + 1420070400000);
         }
     }
 }
