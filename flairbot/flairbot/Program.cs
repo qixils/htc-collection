@@ -42,14 +42,7 @@ class Program
 
 			if (!e.Channel.IsPrivate && e.Message.Text.ToLower() == $"{prefix}help")
 			{
-				if(e.Channel.Name != "music" && e.Server.Id == 184755239952318464) {
-					string warning = "**All commands besides `!help` only work in DM's!**\n";
-					string teams = "Joho, Meester, Midnight, and Yessoan";
-					string msg1 = "To join a team, type `!` followed by one of the living TWOWers names (the living TWOWers are " + teams + ") - ex: `!Meester`\n";
-					string msg2 = "To remove yourself from your team, simply type `!Remove`";
-
-					await e.Channel.SendMessage(warning + msg1 + msg2);
-				}
+				await e.Channel.SendFile("help-image.png");
 			}
 			if (isOwner)
 			{
