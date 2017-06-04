@@ -134,49 +134,6 @@ namespace joinbot
 																//$"[Member #]      {memnum}\n" +      | broken for some reason. often shows users as being member #11
 																$"[Avatar] {avatar}\n```");
 							}
-							else if (isOwner && cmd == "roles")
-							{
-								var roles = e.Server.Roles.OrderBy(role => role.Position).ToList();
-								string rolestring = string.Join(", ", roles);
-								Console.WriteLine($"{rolestring}");
-							}
-							else if (isOwner && cmd == "minuser")
-							{
-								List<User> users = new List<User>();
-								List<User> bots = new List<User>();
-								foreach (User usr in e.Server.Users)
-								{
-									if (!usr.IsBot)
-										users.Add(usr);
-									else
-										bots.Add(usr);
-								}
-								var sortedusers = users.OrderBy(usr => usr.Id);
-								var sortedbots = bots.OrderBy(usr => usr.Id);
-								User minuser = sortedusers.First();
-								User minbot = sortedbots.First();
-								await e.Channel.SendMessage($"Lowest User ID: {minuser.Id} ({minuser.Mention})\nLowest Bot ID: {minbot.Id} ({minbot.Mention})");
-							}
-							else if (isOwner && cmd == "modcount")
-							{
-								List<User> users = new List<User>();
-								List<string> usernames = new List<string>();
-								foreach (User dude in e.Server.Users)
-								{
-									List<char> name = dude.Name.ToList();
-									if (name.Count > 2)
-									{
-										if (name[2] == 'a')
-										{
-											users.Add(dude);
-											usernames.Add(dude.Name);
-										}
-									}
-								}
-								Console.WriteLine(users.Count);
-								await e.Channel.SendMessage($"Well according to my calculations, there are {users.Count} users with an `a` in the 3rd slot of their username. This means we should have {users.Count * 10} mods.");
-								Console.WriteLine(string.Join(", ", usernames));
-							}
 							else if (isOwner && cmd == "topusers")
 							{
 								if (args == null) { await e.Channel.SendMessage(MessageTop(botnum, e.Server.Id, 10)); }
@@ -206,27 +163,7 @@ namespace joinbot
 							if (e.Message.Text == "!gameupdate")
 								_client.SetGame("for " + htc.UserCount.ToString() + " users");
 
-							if (isOwner || e.User.ServerPermissions.ManageRoles || e.Channel.Id == 282500390891683841)
-							{
-								if (e.Message.Text == "!usercount")
-									await e.Channel.SendMessage(e.Server.Name + " currently has " + e.Server.UserCount + " users.");
-
-								else if (e.Message.Text.StartsWith($"!discrimsearch "))
-								{
-									try
-									{
-										foreach (User usr in serv.Users)
-										{
-											if (usr.Discriminator.ToString() == e.Message.Text.Replace("!discrimsearch ", ""))
-												await e.Channel.SendMessage($"Found user `{usr.Name}` | ID: `{usr.Id}`");
-										}
-									}
-									catch (Exception error)
-									{
-										Console.WriteLine("[ERROR] An error occured while running !discrimsearch: \n" + error.ToString());
-									}
-								}
-							}
+							if ((isOwner || e.User.ServerPermissions.ManageRoles) && (e.Message.Text == "!usercount")) { await e.Channel.SendMessage($"{e.Server.Name} currently has {e.Server.UserCount} users."); }
 						}
 					}
 				}
@@ -625,11 +562,6 @@ namespace joinbot
 			{
 				_client.Connect(token, TokenType.Bot);
 			}
-		}
-		public static string TrimString(string input, int charstotrim)
-		{
-			string output = input.Remove(input.Length - charstotrim);
-			return output;
 		}
 		public static DateTimeOffset CreationDate(ulong id)
 		{
