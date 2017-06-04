@@ -40,10 +40,6 @@ class Program
 			if (owner.Id == e.User.Id)
 				isOwner = true;
 
-			if (!e.Channel.IsPrivate && e.Message.Text.ToLower() == $"{prefix}help")
-			{
-				await e.Channel.SendFile("help-image.png");
-			}
 			if (isOwner)
 			{
 				if(e.Message.Text == $"{prefix}permcheck")
@@ -82,15 +78,7 @@ class Program
 						if (role.Name.StartsWith("#Team"))
 							teams.Add(role);
 
-					if (e.Message.Text.ToLower() == "!help" && e.Channel.Name != "music")
-					{
-						string warning = "**All commands besides `!help` only work in DM's!**\n";
-						string avateams = "Joho, Meester, Midnight, and Yessoan";
-						string msg1 = $"To join a team, type `!` followed by one of the living TWOWers names (the living TWOWers are {avateams}) - ex `!Meester`\n";
-						string msg2 = "To remove yourself from your team, simply type `!Remove`";
-
-						await e.Channel.SendMessage(warning + msg1 + msg2);
-					}
+					if (e.Message.Text.ToLower() == "!help" && e.Channel.Name != "music") { await e.Channel.SendFile("help-image.png"); }
 
 					else if (e.Message.Text.ToLower() == "!remove")
 					{
